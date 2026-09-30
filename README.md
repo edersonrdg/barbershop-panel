@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BarberBot: painel
 
-## Getting Started
+Painel web, pensado primeiro para o celular, do BarberBot: um SaaS em que um assistente de IA agenda, remarca e cancela horários pelo WhatsApp da barbearia. Aqui o Dono e os Barbeiros acompanham a agenda, os clientes e as conversas.
 
-First, run the development server:
+A API e o PRD ficam em [barbershop-appointment-agent](https://github.com/edersonrdg/barbershop-appointment-agent).
+
+## Stack
+
+Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · shadcn/ui · Zod · openapi-fetch · Vitest
+
+## Como rodar
+
+Pré-requisitos: Node.js 24 e a API rodando localmente (veja o README dela).
 
 ```bash
+cp .env.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+O painel abre em http://localhost:5173.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Como funciona a integração
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+O navegador nunca fala direto com a API. O servidor do Next funciona como BFF: faz o login, guarda o token num cookie `httpOnly` e chama a API com esse token. Os tipos das rotas são gerados do Swagger da API (`npm run api:types`), então o painel e a API compartilham o mesmo contrato.
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Comando | O que faz |
+| --- | --- |
+| `npm run dev` | Servidor de desenvolvimento na porta 5173 |
+| `npm run build` | Build de produção |
+| `npm run lint` | ESLint com correção automática |
+| `npm test` | Testes unitários (Vitest) |
+| `npm run api:types` | Regera os tipos da API a partir de `$API_URL/docs-json` |
