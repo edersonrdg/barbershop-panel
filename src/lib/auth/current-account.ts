@@ -27,3 +27,11 @@ export async function requireAccount(): Promise<MyAccount> {
   if (account === 'expired') redirect('/session-expired');
   return account;
 }
+
+// Interface comfort only: the API still answers 403 to a barber on the
+// owner-only routes, so this just avoids showing a screen that cannot work.
+export async function requireOwner(): Promise<MyAccount> {
+  const account = await requireAccount();
+  if (account.user.role !== 'owner') redirect('/agenda');
+  return account;
+}
