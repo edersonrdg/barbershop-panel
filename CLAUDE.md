@@ -53,14 +53,24 @@ src/
 ├── app/                     # Rotas (App Router)
 │   ├── login/               # Página pública + Server Action de login
 │   ├── session-expired/     # Limpa o cookie de um token vencido e volta ao login
-│   └── (panel)/             # Área logada: layout com requireAccount() e as telas
-├── components/
+│   ├── cadastro/ esqueci-senha/ redefinir-senha/ aceitar-convite/   # Páginas públicas
+│   └── (panel)/             # Área logada: layout com requireAccount(), navegação e as telas
+│       ├── agenda/          # US-08 a US-11 (novo/, bloqueio/)
+│       ├── clientes/        # US-12
+│       ├── conversas/       # US-16
+│       └── configuracoes/   # US-02 a US-06 e US-13 (requireOwner())
+├── components/              # Peças usadas por mais de uma tela (campos, ActionButton, PageHeader...)
 │   └── ui/                  # Componentes do shadcn/ui (gerados; edite com parcimônia)
 └── lib/
     ├── env.ts               # Variáveis de ambiente do servidor, validadas com Zod
-    ├── api/                 # Cliente da API, tipos gerados e tratamento de erros
-    └── auth/                # Cookie de sessão e conta atual
+    ├── api/                 # Cliente da API (createSessionApiClient na área logada), tipos e erros
+    ├── auth/                # Cookie de sessão, requireAccount() e requireOwner()
+    ├── forms.ts             # FormState das Server Actions e eco dos valores após erro
+    └── datetime.ts money.ts phone.ts week-hours.ts   # Conversões puras, com teste ao lado
 ```
+
+- **Formulários:** a action devolve `FormState` (`message`, `fieldErrors` com o caminho da API, `values`). React reseta o form após a action; formulários com `<select>` usam `key={JSON.stringify(state.values)}` para remontar com o que foi enviado.
+- **Ações de um clique** (ativar, remover, marcar falta) usam `ActionButton`: erro abaixo do botão, sucesso em toast.
 
 - Componentes específicos de uma tela ficam na pasta da rota (ex.: `app/login/login-form.tsx`). Só vão para `src/components/` quando forem usados por mais de uma tela.
 - Arquivos em kebab-case; um componente exportado por arquivo.

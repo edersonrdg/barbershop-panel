@@ -5,12 +5,19 @@ import { FormMessage } from '@/components/form-message';
 import { SubmitButton } from '@/components/submit-button';
 import { TextField } from '@/components/text-field';
 import { valueOf, type FormState } from '@/lib/forms';
-import { login } from './actions';
+import { requestPasswordReset } from './actions';
 
 const initialState: FormState = {};
 
-export function LoginForm() {
-  const [state, formAction] = useActionState(login, initialState);
+export function ForgotPasswordForm() {
+  const [state, formAction] = useActionState(
+    requestPasswordReset,
+    initialState,
+  );
+
+  if (state.success) {
+    return <FormMessage tone="success" message={state.success} />;
+  }
 
   return (
     <form action={formAction} className="flex flex-col gap-5" noValidate>
@@ -23,19 +30,9 @@ export function LoginForm() {
         autoComplete="email"
         defaultValue={valueOf(state.values, 'email')}
         error={state.fieldErrors?.email}
-        className="h-12"
         required
       />
-      <TextField
-        name="password"
-        label="Senha"
-        type="password"
-        autoComplete="current-password"
-        error={state.fieldErrors?.password}
-        className="h-12"
-        required
-      />
-      <SubmitButton pendingLabel="Entrando…">Entrar</SubmitButton>
+      <SubmitButton pendingLabel="Enviando…">Enviar link</SubmitButton>
     </form>
   );
 }
